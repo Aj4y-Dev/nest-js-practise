@@ -35,3 +35,40 @@ UPDATE src/user/user.module.ts (244 bytes)
 ```
 
 The CLI does all of that automatically, reducing repetitive work and helping keep every feature organized in the same way. This consistency is one of the reasons NestJS is popular for medium and large backend applications.
+
+Rule: Always define static routes before dynamic routes.
+
+Example:
+
+```
+import { Controller, Get, Param } from '@nestjs/common';
+
+@Controller('users')
+export class UserController {
+
+  @Get(':id')
+  getUser(@Param('id') id: string) {
+    return `User ID: ${id}`;
+  }
+
+  @Get('profile')
+  getProfile() {
+    return 'User Profile';
+  }
+}
+
+Now you visit:
+GET /users/profile
+
+What happens?
+
+Nest checks the routes in the order they were registered.
+
+The first matching route is: /users/:id
+
+Here: :id = "profile"
+
+So the response becomes: User ID: profile
+
+Your getProfile() method is never called.
+```
