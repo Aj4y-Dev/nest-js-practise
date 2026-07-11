@@ -1,4 +1,6 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Put } from '@nestjs/common';
+import { CreateUserDto } from './dto/createUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 // @Get('all')       //GET /user/all
 // @Get(':id')       //GET /user/:id - dynamic segment
@@ -29,5 +31,20 @@ export class UserController {
   @Get(':id')
   getUserById(@Param('id') id: string) {
     return { id, name: 'Ajay' };
+  }
+
+  //POST /user
+  @Post()
+  createuser(@Body() CreateUserDto: CreateUserDto) {
+    return { date: CreateUserDto, message: 'User created Successfully' };
+  }
+
+  //PUT /user/:id
+  @Put(':id')
+  updateUser(@Param('id') id: string, @Body() UpdateUserDto: UpdateUserDto) {
+    return {
+      data: { id, ...UpdateUserDto },
+      message: 'User update Successfully',
+    };
   }
 }
