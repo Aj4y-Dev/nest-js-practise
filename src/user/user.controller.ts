@@ -1,6 +1,16 @@
-import { Controller, Get, Param, Query, Post, Body, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Post,
+  Body,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { UserService } from './user.service';
 
 // @Get('all')       //GET /user/all
 // @Get(':id')       //GET /user/:id - dynamic segment
@@ -12,39 +22,35 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Controller('user') // this mean /user of route
 export class UserController {
+  constructor(private readonly userService: UserService) {}
+
   //GET /user
   @Get()
-  getUser(@Query('name') name: string) {
-    const users = [
-      { id: 1, name: 'Ram' },
-      { id: 2, name: 'Ajay' },
-    ];
-
-    if (name) {
-      return users.filter((user) =>
-        user.name.toLowerCase().includes(name.toLowerCase()),
-      );
-    }
+  getUser(@Query('name') name: string): unknown {
+    return this.userService.findAllUsers(name);
   }
 
   //GET by id /user/id
   @Get(':id')
   getUserById(@Param('id') id: string) {
-    return { id, name: 'Ajay' };
+    return this.userService.findOneUser(Number(id));
   }
 
   //POST /user
   @Post()
   createuser(@Body() CreateUserDto: CreateUserDto) {
-    return { date: CreateUserDto, message: 'User created Successfully' };
+    return this.userService.createUser(CreateUserDto);
   }
 
   //PUT /user/:id
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() UpdateUserDto: UpdateUserDto) {
-    return {
-      data: { id, ...UpdateUserDto },
-      message: 'User update Successfully',
-    };
+    return this.userService.updateUser(Number(id), UpdateUserDto);
+  }
+
+  //DELETE /user/:id
+  @Delete(':id')
+  deleteUser(@Param('id') id: string) {
+    return this.userService.deleteUser(Number(id));
   }
 }
