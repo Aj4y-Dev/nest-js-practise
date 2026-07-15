@@ -7,11 +7,13 @@ import {
   Body,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserService } from './user.service';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
+import { RoleGuard } from 'src/guards/role.guard';
 
 // @Get('all')       //GET /user/all
 // @Get(':id')       //GET /user/:id - dynamic segment
@@ -51,6 +53,7 @@ export class UserController {
 
   //DELETE /user/:id
   @Delete(':id')
+  @UseGuards(RoleGuard)
   deleteUser(@Param('id') id: string) {
     return this.userService.deleteUser(Number(id));
   }
