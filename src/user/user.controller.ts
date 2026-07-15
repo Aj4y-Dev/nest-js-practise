@@ -11,6 +11,7 @@ import {
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserService } from './user.service';
+import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 
 // @Get('all')       //GET /user/all
 // @Get(':id')       //GET /user/:id - dynamic segment
@@ -32,8 +33,8 @@ export class UserController {
 
   //GET by id /user/id
   @Get(':id')
-  getUserById(@Param('id') id: string) {
-    return this.userService.findOneUser(Number(id));
+  getUserById(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findOneUser(id);
   }
 
   //POST /user
